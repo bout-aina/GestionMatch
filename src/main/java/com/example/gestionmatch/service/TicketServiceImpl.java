@@ -25,26 +25,27 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     TicketMapper ticketMapper;
     @Override
-    public TicketResponceDTO addTicket(TicketRequestDTO ticket) {
+    public TicketResponceDTO addTicket(TicketRequestDTO ticket)  {
        int totalticket=  ticketRepository.findAll().size();
+        System.out.println(totalticket);
        //test que le match ne doit pas depasser 20 tickets
-        if( totalticket < 20 )
-        {
-            Match match = matchRepository.findById(ticket.getMatchId()).orElse(null);
-            Ticket ticketToSave = new Ticket();
-            ticketToSave.setPrix(ticket.getPrix());
-            ticketToSave.setReference(ticket.getReference());
-            ticketToSave.setStatut(ticket.getStatut());
-            ticketToSave.setAchete(ticket.getAchete());
-            ticketToSave.setMatch(match);
-
-
-            Ticket savedTicket = ticketRepository.save(ticketToSave);
-
-            TicketResponceDTO ticketResponceDTO = ticketMapper.fromTicket(savedTicket);
-            return ticketResponceDTO;
+        if( totalticket > 19 ) {
+            throw new RuntimeException("Les tickets ne sont plus dispo !!!");
         }
-       return null;
+
+        Match match = matchRepository.findById(ticket.getMatchId()).orElse(null);
+        Ticket ticketToSave = new Ticket();
+        ticketToSave.setPrix(ticket.getPrix());
+        ticketToSave.setReference(ticket.getReference());
+        ticketToSave.setStatut(ticket.getStatut());
+        ticketToSave.setAchete(ticket.getAchete());
+        ticketToSave.setMatch(match);
+
+
+        Ticket savedTicket = ticketRepository.save(ticketToSave);
+
+        TicketResponceDTO ticketResponceDTO = ticketMapper.fromTicket(savedTicket);
+        return ticketResponceDTO;
     }
 
     @Override

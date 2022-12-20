@@ -38,6 +38,7 @@ type Match{
     ref_match:String,
     lieu:String,
     date_heure:String,
+
     equipe1:String,
     equipe2:String,
     tickets: [Ticket]
