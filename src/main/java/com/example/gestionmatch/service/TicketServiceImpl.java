@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+
 @Service
 @Transactional
 public class TicketServiceImpl implements TicketService {
@@ -26,14 +28,17 @@ public class TicketServiceImpl implements TicketService {
     TicketMapper ticketMapper;
     @Override
     public TicketResponceDTO addTicket(TicketRequestDTO ticket)  {
-       int totalticket=  ticketRepository.findAll().size();
+        Match match = matchRepository.findById(ticket.getMatchId()).orElse(null);
+        int totalticket=  ticketRepository.NbrticketParMatch(match.getId());
+
         System.out.println(totalticket);
-       //test que le match ne doit pas depasser 20 tickets
-        if( totalticket > 19 ) {
-            throw new RuntimeException("Les tickets ne sont plus dispo !!!");
+       //test que le match ne doit pas depasser 6 tickets
+        if( totalticket > 5 ) {
+            throw new RuntimeException("Les tickets ne sont plus dispo   pour ce match !!!");
+
         }
 
-        Match match = matchRepository.findById(ticket.getMatchId()).orElse(null);
+
         Ticket ticketToSave = new Ticket();
         ticketToSave.setPrix(ticket.getPrix());
         ticketToSave.setReference(ticket.getReference());
